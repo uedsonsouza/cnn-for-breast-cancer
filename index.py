@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -29,17 +30,17 @@ X_scaled = scaler.fit_transform(X)
 X_scaled = X_scaled.reshape(X_scaled.shape[0], X_scaled.shape[1], 1)
 
 # Separar em treino/teste
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
+X_train_val, X_test, y_train_val, y_test = train_test_split(X_scaled, y, test_size=0.20, random_state=42, stratify=y)
+X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.20, random_state=42, stratify=y_train_val)
 # 2. Definir modelo CNN-1D
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv1D(filters=32, kernel_size=5, activation='relu', input_shape=(X_train.shape[1], 1)),
     tf.keras.layers.MaxPooling1D(pool_size=2),
-    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dropout(0.20),
     tf.keras.layers.Conv1D(filters=64, kernel_size=5, activation='relu'),
     tf.keras.layers.GlobalMaxPooling1D(),
     tf.keras.layers.Dense(64, activation='relu'),
-    tf.keras.layers.Dropout(0.1),
+    tf.keras.layers.Dropout(0.10),
     tf.keras.layers.Dense(1, activation='sigmoid')  # Saída binária
 ])
 
@@ -51,7 +52,7 @@ history = model.fit(
     X_train, y_train,
     epochs=100,
     batch_size=32,
-    validation_data=(X_test, y_test),
+    validation_data=(X_val, y_val),
     verbose=1
 )
 
@@ -59,24 +60,39 @@ history = model.fit(
 preds = model.predict(X_test)
 y_pred = (preds > 0.5).astype(int)
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Aqui vou printar a matriz de confusao
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
 
 # Grafico pra visualizacao dos resultados
-
 plt.title('Gráfico de Acurácia e Perda')
 plt.xlabel('Épocas')
 plt.ylabel('Acurácia / Perda')
 plt.plot(history.history['accuracy'], label='Acurácia Treinamento')
 plt.plot(history.history['val_accuracy'], label='Acurácia Validação')
+plt.plot(history.history['loss'], label='Perda Treinamento')
+plt.plot(history.history['val_loss'], label='Perda Validação')
 plt.legend()
+print('TENHO CUM CADIM DE DADOS --->',history.history.keys())
 plt.show()
 
+plt.figure(figsize=(10, 6))
+cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+
+# gero o plot pra matriz de confusao com percentuais 
+plt.title('Matriz de confusão')
+annotations = []
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        annotations.append(f'{cm[i,j]}\n({cm_percent[i,j]:.1f}%)')
+
+annotations = np.array(annotations).reshape(cm.shape)
+sns.heatmap(cm, annot=annotations, fmt='', cmap='Blues',
+            xticklabels=['Benigno ', 'Maligno'],
+            yticklabels=['Benigno ', 'Maligno'])
+
 df_clean = df.copy()
-sns.set_theme(style="darkgrid", palette="coolwarm")
-# Esse gráfico nao entra no artigo devido visualização ruim
-sns.pairplot(df_clean, vars=['radius_mean','texture_mean','perimeter_mean','area_mean','smoothness_mean'], hue='diagnosis', markers=["o", "s"], plot_kws={'alpha': 0.5})
-plt.suptitle('Pairplot de Features Selecionadas por Diagnóstico', y=1.02)
-plt.show()
 
 plt.figure(figsize=(12,10))
 corr = df_clean.drop('diagnosis', axis=1).corr()
