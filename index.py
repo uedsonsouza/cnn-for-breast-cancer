@@ -13,9 +13,6 @@ sns.set_palette("colorblind")
 colors_blind_palette = sns.color_palette()
 figsize_double_column_split = (7.0, 2.5)
 
-#==================================
-#           Functions
-#==================================
 def to_cnn1d(arr):
     """
     Convert a 2D feature matrix (N, F) into a 3D tensor (N, F, 1) expected by Conv1D.
@@ -83,9 +80,6 @@ def evaluate_at_threshold(y_true, probs, threshold=0.5):
         'tn_fp_fn_tp': (int(tn), int(fp), int(fn), int(tp)),
     }
 
-#==================================
-#           Main
-#==================================
 SEED = 42
 tf.keras.utils.set_random_seed(SEED)
 
@@ -280,10 +274,10 @@ axes[1].spines['bottom'].set_linewidth(1.2)
 axes[1].legend(loc='lower left', frameon=False)
 axes[1].text(0.01, 0.99, 'b', transform=axes[1].transAxes, fontsize=11, fontweight='bold', ha='left', va='bottom')
 
-outname = 'wdbc_roc_pr_test.pdf'
 plt.tight_layout()
-plt.savefig(outname, dpi=300, bbox_inches='tight', transparent=True)
-print(f'* Figure saved: {outname}')
+plt.savefig('wdbc_roc_pr_test.pdf', dpi=300, bbox_inches='tight', transparent=True)
+plt.show()
+print(f'* Figure saved: wdbc_roc_pr_test.pdf')
 
 y_test_pred = (test_probs >= chosen_thr).astype(int)
 cm = confusion_matrix(y_test, y_test_pred)
@@ -295,10 +289,11 @@ plt.plot(history.history['val_accuracy'], label='Acurácia Validação')
 plt.plot(history.history['loss'], label='Perda Treinamento')
 plt.plot(history.history['val_loss'], label='Perda Validação')
 plt.legend()
-print('TENHO CUM CADIM DE DADOS --->', history.history.keys())
+plt.savefig('acuracia_perda.pdf', dpi=300, bbox_inches='tight', transparent=True)
+print('Dados do history: ', history.history.keys())
 plt.show()
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
 plt.title('Matriz de confusão')
 annotations = []
@@ -309,11 +304,23 @@ annotations = np.array(annotations).reshape(cm.shape)
 sns.heatmap(cm, annot=annotations, fmt='', cmap='Blues',
             xticklabels=['Benigno ', 'Maligno'],
             yticklabels=['Benigno ', 'Maligno'])
+plt.savefig('matriz_confusao.pdf', dpi=300, bbox_inches='tight', transparent=True)
+plt.show()
 
 df_clean = df.copy()
-plt.figure(figsize=(12,10))
+plt.figure(figsize=(14, 6))
 corr = df_clean.drop('diagnosis', axis=1).corr()
-sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0)
-plt.title('Mapa de Calor de Correlação entre Features')
+sns.heatmap(
+    corr,
+    annot=True,
+    fmt='.2f',
+    cmap='coolwarm',
+    center=0,
+    annot_kws={"size": 7}
+)
+plt.title('Mapa de Calor de Correlação entre Features', fontsize=16)
+plt.xticks(rotation=45, ha='right', fontsize=8)
+plt.yticks(rotation=0, fontsize=8)
 plt.tight_layout()
+plt.savefig('mapa_calor.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
