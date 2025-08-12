@@ -119,3 +119,15 @@ Os arquivos de saída (PDFs) serão gerados na pasta do projeto.
 ### Matriz de correlação entre features
 
 ![Matriz de correlação](public/images/matriz_de_correlacao.png)
+
+Caso queria você pode realizar outros testes e analisar diferentes resultados. Para testes totalmente aleatórios por exemplo, comente as linhas 
+```
+SEED = 42
+tf.keras.utils.set_random_seed(SEED)
+```
+e remova remova 'random_state=SEED' dos comandos train_test_split.
+
+Ou ainda para garantir uma reprodutibilidade na divisão dos dados, mas o restante do pipeline aleatório a cada execução comente apenas a linha:
+```
+tf.keras.utils.set_random_seed(SEED)
+```
