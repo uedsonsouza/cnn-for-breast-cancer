@@ -272,7 +272,7 @@ axes[1].legend(loc='lower left', frameon=False)
 axes[1].text(0.01, 0.99, 'b', transform=axes[1].transAxes, fontsize=11, fontweight='bold', ha='left', va='bottom')
 
 plt.tight_layout()
-plt.savefig('wdbc_roc_pr_test.pdf', dpi=300, bbox_inches='tight', transparent=True)
+plt.savefig('public/images_pdf/wdbc_roc_pr_test.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
 
 y_test_pred = (test_probs >= chosen_thr).astype(int)
@@ -289,7 +289,7 @@ annotations = np.array(annotations).reshape(cm.shape)
 sns.heatmap(cm, annot=annotations, fmt='', cmap='Blues',
             xticklabels=['Benigno ', 'Maligno'],
             yticklabels=['Benigno ', 'Maligno'])
-plt.savefig('matriz_confusao.pdf', dpi=300, bbox_inches='tight', transparent=True)
+plt.savefig('public/images_pdf/matriz_confusao.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
 
 plt.figure(figsize=(14, 6))
@@ -306,5 +306,5 @@ plt.title('Mapa de Calor de Correlação entre Features', fontsize=16)
 plt.xticks(rotation=45, ha='right', fontsize=8)
 plt.yticks(rotation=0, fontsize=8)
 plt.tight_layout()
-plt.savefig('mapa_calor.pdf', dpi=300, bbox_inches='tight', transparent=True)
+plt.savefig('public/images_pdf/mapa_calor.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
