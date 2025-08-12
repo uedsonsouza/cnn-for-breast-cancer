@@ -81,8 +81,6 @@ def evaluate_at_threshold(y_true, probs, threshold=0.5):
     }
 
 SEED = 42
-tf.keras.utils.set_random_seed(SEED)
-
 file_path = 'Breast_cancer_dataset.csv'
 df = pd.read_csv(file_path)
 df = df.drop(columns=[c for c in ['id', 'Unnamed: 32'] if c in df.columns])
@@ -95,7 +93,6 @@ y = df['diagnosis'].astype('int8').values
 
 X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.20, random_state=SEED, stratify=y)
 X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=0.25, random_state=SEED, stratify=y_temp)
-
 scaler = MinMaxScaler()
 X_train = scaler.fit_transform(X_train).astype('float32')
 X_val = scaler.transform(X_val).astype('float32')
