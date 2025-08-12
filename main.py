@@ -81,7 +81,7 @@ def evaluate_at_threshold(y_true, probs, threshold=0.5):
     }
 
 SEED = 42
-file_path = 'Breast_cancer_dataset.csv'
+file_path = 'data/Breast_cancer_dataset.csv'
 df = pd.read_csv(file_path)
 df = df.drop(columns=[c for c in ['id', 'Unnamed: 32'] if c in df.columns])
 
