@@ -274,21 +274,9 @@ axes[1].text(0.01, 0.99, 'b', transform=axes[1].transAxes, fontsize=11, fontweig
 plt.tight_layout()
 plt.savefig('wdbc_roc_pr_test.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
-print(f'* Figure saved: wdbc_roc_pr_test.pdf')
 
 y_test_pred = (test_probs >= chosen_thr).astype(int)
 cm = confusion_matrix(y_test, y_test_pred)
-plt.title('Gráfico de Acurácia e Perda')
-plt.xlabel('Épocas')
-plt.ylabel('Acurácia / Perda')
-plt.plot(history.history['accuracy'], label='Acurácia Treinamento')
-plt.plot(history.history['val_accuracy'], label='Acurácia Validação')
-plt.plot(history.history['loss'], label='Perda Treinamento')
-plt.plot(history.history['val_loss'], label='Perda Validação')
-plt.legend()
-plt.savefig('acuracia_perda.pdf', dpi=300, bbox_inches='tight', transparent=True)
-print('Dados do history: ', history.history.keys())
-plt.show()
 
 plt.figure(figsize=(8, 6))
 cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
@@ -304,9 +292,8 @@ sns.heatmap(cm, annot=annotations, fmt='', cmap='Blues',
 plt.savefig('matriz_confusao.pdf', dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
 
-df_clean = df.copy()
 plt.figure(figsize=(14, 6))
-corr = df_clean.drop('diagnosis', axis=1).corr()
+corr = df.drop('diagnosis', axis=1).corr()
 sns.heatmap(
     corr,
     annot=True,
