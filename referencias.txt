@@ -1,6 +1,0 @@
-https://www.insightlab.ufc.br/aprenda-a-criar-e-treinar-uma-rede-neural-convolucional-cnn/
-https://www.kaggle.com/datasets/uciml/electric-power-consumption-data-set
-https://observatoriodeoncologia.com.br/indicadores/2024/indicadores-de-cancer-de-mama/
-https://www.who.int/news-room/fact-sheets/detail/breast-cancer
-https://www.scielosp.org/article/csc/2024.v29n3/e01712023/
-https://www.even3.com.br/anais/enmc2024/860800-analise-de-descritores-de-imagem-e-classificadores-classicos-para-diagnostico-de-covid-19-a-partir-de-raio-x-do-t/
